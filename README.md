@@ -1,0 +1,23 @@
+- Abortion
+- Basic Income
+- Carbon
+- Climate
+- Energy
+- Gay
+- Gender
+- Globalism
+- Government
+- Gun Control
+- Healthcare
+- Immigration
+- Marijuana
+- Minimum Wage
+- Multiculturalism
+- Net Neutrality
+- Parental Leave
+- Post-Modernism
+- Refugees
+- Space
+- Taxation
+- Wage Gap
+- War

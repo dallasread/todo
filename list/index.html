@@ -1,0 +1,37 @@
+<div class="list">
+    {{#with list=list}}
+        <h1>
+            {{#if list.data.back}}
+                <a href="#" onclick::{{@goToList(undefined, list.data.back.data)}} class="back">
+                    &laquo;
+                </a>
+            {{/if}}
+
+            <input type="text" value::{{title}} oninput::{{@set(list, 'title')}}>
+        </h1>
+
+        <ul class="items">
+            {{#each items}}
+                <li>
+                    <a href="#" onclick::{{@goToList(list, this)}} class="go">
+                        &raquo;
+                    </a>
+
+                    <input type="text" value::{{title}} oninput::{{@set(list, 'title', undefined, this)}}>
+                </li>
+            {{/each}}
+        </ul>
+
+        {{#if isAdding}}
+            <ul class="new-item">
+                <li>
+                    <form onsubmit::{{@add(list)}}>
+                        <input type="text" value::{{newTodo.title}} oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(list, 1)}}>
+                    </form>
+                </li>
+            </ul>
+        {{/if}}
+    {{/with}}
+</div>
+
+<div class="list-underlay" onclick::{{@addItem(list)}}></div>

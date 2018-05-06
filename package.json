@@ -1,0 +1,28 @@
+{
+  "name": "gov-vote",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dallas Read",
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^0.25.0",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.24.1",
+    "img-loader": "^1.3.1",
+    "json-loader": "^0.5.4",
+    "node-sass": "^3.11.2",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^3.5.2"
+  },
+  "dependencies": {
+    "balajs": "^1.0.7",
+    "generate-js-custom-element": "dallasread/Custom-Element#components"
+  }
+}
