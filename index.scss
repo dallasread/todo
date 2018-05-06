@@ -1,13 +1,14 @@
 @import "css/reset";
 
 $padding: 10px;
+$black: #000;
 
 body {
     font-size: 18px;
     line-height: 1;
     font-family: Nunito, Helvetica Neue, Helvetica, Arial, Sans Serif;
     color: #fff;
-    background: #111;
+    background: $black;
 }
 
 .list-underlay {
@@ -16,7 +17,7 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
-    background: #111;
+    background: $black;
     z-index: -1;
 }
 
@@ -42,7 +43,7 @@ body {
             padding: $padding * 1.5 $padding;
             font-size: 150%;
             color: rgba(255, 255, 255, 0.5);
-            background: #111;
+            background: $black;
         }
     }
 
