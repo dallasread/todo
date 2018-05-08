@@ -38,10 +38,10 @@ body {
 
         .back {
             position: absolute;
-            left: $padding;
+            right: $padding;
             top: 0;
-            padding: $padding * 1.5 $padding;
-            font-size: 150%;
+            padding: $padding * 1.5 $padding * 0.5;
+            font-size: 120%;
             color: rgba(255, 255, 255, 0.5);
             background: $black;
         }

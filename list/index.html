@@ -3,7 +3,7 @@
         <h1>
             {{#if list.data.back}}
                 <a href="#" onclick::{{@goToList(undefined, list.data.back.data)}} class="back">
-                    &laquo;
+                    |||
                 </a>
             {{/if}}
 
@@ -17,7 +17,7 @@
                         &raquo;
                     </a>
 
-                    <input type="text" value="{{title}}" oninput::{{@set(list, 'title', undefined, this)}}>
+                    <input type="text" value::{{title}} oninput::{{@set(list, 'title', undefined, this)}}>
                 </li>
             {{/each}}
         </ul>
@@ -26,7 +26,7 @@
             <ul class="new-item">
                 <li>
                     <form onsubmit::{{@add(list)}}>
-                        <input type="text" value="{{newTodo.title}}" oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(list, 1)}}>
+                        <input type="text" value::{{newTodo.title}} oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(list, 1)}}>
                     </form>
                 </li>
             </ul>
