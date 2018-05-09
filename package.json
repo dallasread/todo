@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "balajs": "^1.0.7",
-    "generate-js-custom-element": "dallasread/Custom-Element#components"
+    "generate-js-custom-element": "dallasread/Custom-Element#components",
+    "localforage": "^1.7.1"
   }
 }

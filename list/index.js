@@ -8,14 +8,15 @@ var bala = require('balajs'),
     List = CustomElement.createElement({
     template: require('./index.html'),
     transforms: {
-        add: function add(list, unsetIsAdding) {
+        add: function add(list, todo, unsetIsAdding) {
             return function doAdd(event) {
                 event.preventDefault();
 
                 if (list.get('newTodo.title') && list.get('newTodo.title').length) {
-                    list.push('items', clone(list.get('newTodo')));
+                    list.push('data.todo.items', clone(list.get('newTodo')));
                     list.set('newTodo.title', '');
                 }
+                    console.log(list)
 
                 if (unsetIsAdding) {
                     setTimeout(function() {
@@ -52,7 +53,6 @@ var bala = require('balajs'),
 
     options.data = options.data || {};
     options.data.list = _;
-    options.data.items = options.data.items || [];
 
     CustomElement.call(_, options);
 
