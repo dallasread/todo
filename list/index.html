@@ -1,17 +1,17 @@
 <div class="list">
-    {{#with list=list}}
+    {{#with list=list todo=todo}}
         <h1>
             {{#if list.data.back}}
                 <a href="#" onclick::{{@goToList(undefined, list.data.back.data)}} class="back">
-                    |||
+                    ↑
                 </a>
             {{/if}}
 
-            <input type="text" value="{{title}}" oninput::{{@set(list, 'title')}}>
+            <input type="text" readonly::{{list.id}} value::{{todo.title}} oninput::{{@set(list, 'todo.title')}}>
         </h1>
 
         <ul class="items">
-            {{#each items}}
+            {{#each todo.items}}
                 <li>
                     <a href="#" onclick::{{@goToList(list, this)}} class="go">
                         &raquo;
@@ -25,8 +25,8 @@
         {{#if isAdding}}
             <ul class="new-item">
                 <li>
-                    <form onsubmit::{{@add(list)}}>
-                        <input type="text" value::{{newTodo.title}} oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(list, 1)}}>
+                    <form onsubmit::{{@add(list, todo)}}>
+                        <input type="text" value::{{newList.title}} oninput::{{@set(list, 'newList.title')}} onblur::{{@add(list, todo, 1)}}>
                     </form>
                 </li>
             </ul>
