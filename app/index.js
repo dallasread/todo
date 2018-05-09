@@ -1,28 +1,25 @@
 var CustomElement = require('generate-js-custom-element'),
-    localforage = require('localforage');
+    Todo = require('../todo'),
+    Store = require('../store');
 
 var App = CustomElement.createElement({
     template: require('./index.html'),
-    transforms: {
-        findTodo: function findTodo(todos) {
-            if (!todos || !todos.length) return { title: 'My Todos' };
-            return todos[0];
-        },
-    },
+    transforms: {},
     components: {
         list: require('../list')
     }
 }, function App(options) {
-    var _ = this;
+    var _ = this,
+        store = new Store(_);
 
     options = options || {};
     options.data = options.data || {};
     options.data.app = _;
+    options.data.defaultTodo = new Todo(_, { title: 'Clarity' });
+    options.data.todo = options.data.defaultTodo;
 
     _.defineProperties({
-        store: localforage.createInstance({
-            name: 'Clarity'
-        })
+        store: store
     });
 
     CustomElement.call(_, options);
@@ -34,19 +31,20 @@ App.definePrototype({
     fetchTodos: function fetchTodos(done) {
         var _ = this;
 
-        _.store.getItem('todos', function(err, todos) {
+        _.store.get('todos', function(err, todos) {
+            if (todos) {
+                for (var i = todos.length - 1; i >= 0; i--) {
+                    todos[i] = new Todo(_, todos[i]);
+                }
+            }
+
             _.set('todos', todos);
 
             if (typeof done === 'function') {
                 done(err, todos);
             }
         });
-    },
-
-    saveTodos: function saveTodos(todos) {
-        var _ = this;
-        _.store.setItem('todos', _.get('todos'));
-    },
+    }
 });
 
 module.exports = App;

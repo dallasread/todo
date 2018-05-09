@@ -1,22 +1,21 @@
-var CustomElement = require('generate-js-custom-element');
-
 function clone(item) {
     return JSON.parse(JSON.stringify(item));
 }
 
-var bala = require('balajs'),
+var CustomElement = require('generate-js-custom-element'),
+    Todo = require('../todo'),
+    bala = require('balajs'),
     List = CustomElement.createElement({
     template: require('./index.html'),
     transforms: {
-        add: function add(list, todo, unsetIsAdding) {
+        add: function add(app, list, parent, unsetIsAdding) {
             return function doAdd(event) {
                 event.preventDefault();
 
                 if (list.get('newTodo.title') && list.get('newTodo.title').length) {
-                    list.push('data.todo.items', clone(list.get('newTodo')));
+                    parent.addTodo( clone(list.get('newTodo')) );
                     list.set('newTodo.title', '');
                 }
-                    console.log(list)
 
                 if (unsetIsAdding) {
                     setTimeout(function() {
@@ -26,6 +25,14 @@ var bala = require('balajs'),
             };
         },
 
+        findTodos: function findTodos(todo, todos) {
+            if (!todos) return [];
+
+            return todos.filter(function(t) {
+                return t.todo_id === todo.id;
+            });
+        },
+
         addItem: function addItem(list) {
             return function doAddItem() {
                 list.set('isAdding', true);
@@ -33,18 +40,25 @@ var bala = require('balajs'),
             };
         },
 
-        goToList: function goToList(original, list) {
-            return function doGoToList(event) {
+        setTodo: function setTodo(app, todo, todos, id) {
+            return function doSetTodo(event) {
                 if (event.target.tagName === 'INPUT') return;
-                if (original) list.back = original;
-                document.body.innerHTML = '';
-                document.body.appendChild(new List({ data: list }).element);
+
+                app.set('back', todo.parent());
+                app.set('todo', todo);
             };
         },
 
-        set: function set(list, key, value, startObj) {
+        set: function set(updater, key, value, startObj) {
             return function doSet(event) {
-                list.set(key, value || event.target.value, startObj);
+                updater.set(key, value || event.target.value, startObj);
+            };
+        },
+
+        setTodoInfo: function setTodoInfo(todo, key) {
+            return function doSetTodoInfo(event) {
+                todo[key] = event.target.value;
+                todo.save();
             };
         },
     }
