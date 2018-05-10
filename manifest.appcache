@@ -1,0 +1,11 @@
+CACHE MANIFEST
+# 1.0.0
+
+CACHE:
+assets/application.min.css
+assets/application.min.js
+
+NETWORK:
+*
+http://*
+https://*

@@ -1,20 +1,20 @@
 var Generator = require('generate-js'),
     localforage = require('localforage');
 
-var Store = Generator.generate(function Store() {
-    var _ = this;
+var LocalStore = Generator.generate(function LocalStore() {
+    var _ = this;
 
-    _.defineProperties({
+    _.defineProperties({
 		db: localforage.createInstance({
 	        name: 'Clarity'
 	    })
-    });
+    });
 });
 
-Store.definePrototype({
+LocalStore.definePrototype({
 	get: function get(key, done) {
 		var _ = this;
-        
+
         _.db.getItem(key, done);
 	},
 
@@ -29,9 +29,9 @@ Store.definePrototype({
 	},
 
 	push: function push(key, value, done) {
-	    var _ = this;
-	
-	    _.get(key, function(err, data) {
+	    var _ = this;
+
+	    _.get(key, function(err, data) {
 			data = data || [];
 			data.push(value);
 
@@ -40,4 +40,4 @@ Store.definePrototype({
 	},
 });
 
-module.exports = Store;
+module.exports = LocalStore;

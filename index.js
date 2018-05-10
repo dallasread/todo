@@ -1,5 +1,16 @@
 var App = require('./app'),
-    app = new App();
+    API = require('./api'),
+    LocalStore = require('./local-store'),
+    localStore = new LocalStore(),
+    api = new API({
+        localStore: localStore
+    }),
+    app = new App({
+        api: api,
+        localStore: localStore
+    });
+
+api.app = app;
 
 window.app = app;
 

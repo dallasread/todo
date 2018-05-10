@@ -1,6 +1,5 @@
 var CustomElement = require('generate-js-custom-element'),
-    Todo = require('../todo'),
-    Store = require('../store');
+    Todo = require('../todo');
 
 var App = CustomElement.createElement({
     template: require('./index.html'),
@@ -9,29 +8,28 @@ var App = CustomElement.createElement({
         list: require('../list')
     }
 }, function App(options) {
-    var _ = this,
-        store = new Store(_);
+    var _ = this;
 
     options = options || {};
     options.data = options.data || {};
     options.data.app = _;
+    options.data.localStore = options.localStore;
+    options.data.api = options.api;
     options.data.defaultTodo = new Todo(_, { title: 'Clarity' });
     options.data.todo = options.data.defaultTodo;
 
-    _.defineProperties({
-        store: store
-    });
-
     CustomElement.call(_, options);
 
-    _.fetchTodos();
+    _.fetchLocalTodos(function() {
+        _.get('api').sync(true);
+    });
 });
 
 App.definePrototype({
-    fetchTodos: function fetchTodos(done) {
+    fetchLocalTodos: function fetchLocalTodos(done) {
         var _ = this;
 
-        _.store.get('todos', function(err, todos) {
+        _.get('localStore').get('todos', function(err, todos) {
             if (todos) {
                 for (var i = todos.length - 1; i >= 0; i--) {
                     todos[i] = new Todo(_, todos[i]);

@@ -3,7 +3,6 @@ function clone(item) {
 }
 
 var CustomElement = require('generate-js-custom-element'),
-    Todo = require('../todo'),
     bala = require('balajs'),
     List = CustomElement.createElement({
     template: require('./index.html'),
@@ -49,6 +48,19 @@ var CustomElement = require('generate-js-custom-element'),
             };
         },
 
+        deleteTodo: function deleteTodo(app, todo) {
+            return function doDeleteTodo(event) {
+                if (confirm('Are you sure you want to delete this todo?')) {
+                    var todos = app.get('todos'),
+                        index = todos.indexOf(todo);
+
+                    todos.splice(index, 1);
+                    todo.saveLocal();
+                    app.update();
+                }
+            };
+        },
+
         set: function set(updater, key, value, startObj) {
             return function doSet(event) {
                 updater.set(key, value || event.target.value, startObj);
@@ -56,7 +68,7 @@ var CustomElement = require('generate-js-custom-element'),
         },
 
         setTodoInfo: function setTodoInfo(todo, key) {
-            return function doSetTodoInfo(event) {
+            return function doSetTodoInfo(event) {
                 todo[key] = event.target.value;
                 todo.save();
             };

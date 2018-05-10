@@ -17,6 +17,10 @@
                         &raquo;
                     </a>
 
+                    <a href="#" onclick::{{@deleteTodo(app, this)}} class="delete">
+                        x
+                    </a>
+
                     <input type="text" value::{{title}} oninput::{{@setTodoInfo(this, 'title')}}>
                 </li>
             {{/each}}
