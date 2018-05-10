@@ -4,7 +4,7 @@ $padding: 10px;
 $black: #000;
 
 body {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1;
     font-family: Nunito, Helvetica Neue, Helvetica, Arial, Sans Serif;
     color: #fff;
@@ -29,7 +29,7 @@ body {
         text-align: center;
         padding: $padding;
         padding-bottom: $padding * 2;
-        font-size: 130%;
+        font-size: 120%;
 
         input {
             padding: 0;
@@ -41,7 +41,7 @@ body {
             position: absolute;
             right: $padding;
             top: 0;
-            padding: $padding * 1.5 $padding;
+            padding: $padding * 1.5;
             color: rgba(255, 255, 255, 0.5);
             background: $black;
         }
