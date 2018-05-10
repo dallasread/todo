@@ -4,6 +4,7 @@ function clone(item) {
 
 var CustomElement = require('generate-js-custom-element'),
     bala = require('balajs'),
+    Sortable = require('sortablejs'),
     List = CustomElement.createElement({
     template: require('./index.html'),
     transforms: {
@@ -82,6 +83,9 @@ var CustomElement = require('generate-js-custom-element'),
 
     CustomElement.call(_, options);
 
+    Sortable.create(bala('.todos', _.element)[0], {
+        animation: 150
+    });
 });
 
 List.definePrototype({
