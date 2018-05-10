@@ -4,6 +4,7 @@ CACHE MANIFEST
 CACHE:
 assets/application.min.css
 assets/application.min.js
+index.html
 
 NETWORK:
 *
