@@ -84,7 +84,7 @@ var CustomElement = require('generate-js-custom-element'),
     CustomElement.call(_, options);
 
     Sortable.create(bala('.todos', _.element)[0], {
-        animation: 150
+        animation: 50
     });
 });
 

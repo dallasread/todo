@@ -54,11 +54,13 @@ body {
         background: -webkit-linear-gradient(top,  #c41313 0%,#ad1111 100%); /* Chrome10-25,Safari5.1-6 */
         background: linear-gradient(to bottom,  #c41313 0%,#ad1111 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c41313', endColorstr='#ad1111',GradientType=0 ); /* IE6-9 */
-
-
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         padding: $padding;
         position: relative;
+
+        &.sortable-ghost {
+            visibility: hidden;
+        }
 
         input {
             display: block;
