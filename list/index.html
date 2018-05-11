@@ -7,7 +7,7 @@
                 </a>
             {{/if}}
 
-            <input type="text" disabled::{{!todo.id}} value::{{todo.title}} oninput::{{@set(app, 'title', undefined, todo)}}>
+            <input type="text" disabled::{{!todo.id}} value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
         </h1>
 
         <ul class="todos">
@@ -21,7 +21,7 @@
                         x
                     </a>
 
-                    <input type="text" value::{{title}} oninput::{{@setTodoInfo(this, 'title')}}>
+                    <input type="text" value::{{title}} onblur::{{@setTodoInfo(this, 'title')}}>
                 </li>
             {{/each}}
         </ul>
@@ -30,7 +30,7 @@
             <ul class="new-item">
                 <li>
                     <form onsubmit::{{@add(app, list, todo)}}>
-                        <input type="text" value::{{newTodo.title}} oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(app, list, todo, 1)}}>
+                        <input type="text" value::{{newTodo.title}} onblur::{{@set(list, 'newTodo.title')}} onblur::{{@add(app, list, todo, 1)}}>
                     </form>
                 </li>
             </ul>

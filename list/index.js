@@ -25,8 +25,10 @@ var CustomElement = require('generate-js-custom-element'),
                 event.preventDefault();
 
                 if (list.get('newTodo.title') && list.get('newTodo.title').length) {
-                    parent.addTodo( clone(list.get('newTodo')) );
+                    var todo = parent.addChild( clone(list.get('newTodo')) );
+
                     list.set('newTodo.title', '');
+                    todo.save();
                 }
 
                 if (unsetIsAdding) {
@@ -68,7 +70,7 @@ var CustomElement = require('generate-js-custom-element'),
                         index = todos.indexOf(todo);
 
                     todos.splice(index, 1);
-                    todo.saveLocal();
+                    app.get('api').saveLocal();
                     app.update();
                 }
             };
@@ -95,29 +97,36 @@ var CustomElement = require('generate-js-custom-element'),
 
     CustomElement.call(_, options);
 
-    var sortable = Sortable.create(bala('.todos', _.element)[0], {
-        animation: 150,
-        onEnd: function onEnd() {
-            var ids = sortable.toArray(),
-                todo, id;
-
-            for (var i = 0; i < ids.length; i++) {
-                id = ids[i];
-                todo = _.get('app').get('todos').find(function(t) {
-                    return t.id + '' === id;
-                });
-
-                if (todo) {
-                    todo.priority = i;
-                }
-            }
-
-            todo.saveLocal();
-        }
-    });
+    _.createSortable();
 });
 
 List.definePrototype({
+    createSortable: function createSortable() {
+        var _ = this,
+            sortable = Sortable.create(bala('.todos', _.element)[0], {
+            animation: 150,
+            onEnd: function onEnd() {
+                var ids = sortable.toArray(),
+                    todos = [],
+                    todo, id;
+
+                for (var i = 0; i < ids.length; i++) {
+                    id = ids[i] + '';
+                    todo = _.get('app').get('todos').find(function(t) {
+                        return t.id + '' === id;
+                    });
+
+                    todos.push(todo);
+
+                    if (todo) {
+                        todo.priority = i;
+                    }
+                }
+
+                _.get('app').get('api').save(todos);
+            }
+        });
+    },
 });
 
 module.exports = List;

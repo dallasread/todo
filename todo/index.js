@@ -1,4 +1,5 @@
-var Generator = require('generate-js');
+var Generator = require('generate-js'),
+    INVALID_ID = /_|\./;
 
 var Todo = Generator.generate(function Todo(app, data) {
     var _ = this;
@@ -22,7 +23,7 @@ var Todo = Generator.generate(function Todo(app, data) {
 Todo.definePrototype({
     isPersisted: function isPersisted() {
         var _ = this;
-        return !(typeof _.id === 'string' && /_|\./.test(_.id));
+        return !(typeof _.id === 'string' && INVALID_ID.test(_.id));
     },
 
     isChanged: function isChanged() {
@@ -30,7 +31,7 @@ Todo.definePrototype({
         return JSON.stringify(_.toJSON()) !== JSON.stringify(_.persistedJSON);
     },
 
-    addTodo: function addTodo(data) {
+    addChild: function addChild(data) {
         data.todo_id = this.id;
         data.id = '_' + (Date.now() + Math.random());
 
@@ -39,56 +40,13 @@ Todo.definePrototype({
 
         _.app.push('todos', todo);
 
-        todo.save();
-
         return todo;
     },
 
-    saveLocal: function saveLocal() {
-        var _ = this;
-
-        _.app.get('localStore').set('todos', _.app.get('todos'));
-
-        return _;
-    },
-
-    saveRemote: function saveRemote(done) {
-        var _ = this;
-
-        if (!_.app.get('api').user) {
-            done();
-            return _;
-        }
-
-        _.app.get('api')[_.isPersisted() ? 'patch' : 'post']({
-            todo: _.toJSON()
-        }, done);
-
-        return _;
-    },
-
     save: function save() {
-        var _ = this,
-            oldId = !_.isPersisted() ? _.id : void(0);
+        var _ = this;
 
-        _.saveLocal();
-
-        _.saveRemote(function(err, data) {
-            for (var key in data) {
-                _[key] = data[key];
-            }
-
-            if (oldId) {
-                _.app.get('todos').forEach(function(t) {
-                    if (t.todo_id === oldId) {
-                        t.todo_id = _.id;
-                    }
-                });
-            }
-
-            _.saveLocal();
-            _.persistedJSON = _.toJSON();
-        });
+        _.app.get('api').save([_]);
 
         return _;
     },
@@ -101,9 +59,9 @@ Todo.definePrototype({
             return;
         }
 
-        return todos.filter(function(t) {
+        return todos.find(function(t) {
             return t.id === _.todo_id;
-        })[0] || _.app.get('defaultTodo');
+        }) || _.app.get('defaultTodo');
     },
 
     toJSON: function toJSON() {

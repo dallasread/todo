@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "balajs": "^1.0.7",
+    "browser-cookies": "^1.2.0",
     "generate-js-custom-element": "dallasread/Custom-Element#components",
     "localforage": "^1.7.1",
     "no-async": "^1.1.6",
