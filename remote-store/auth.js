@@ -31,6 +31,8 @@ module.exports = {
                 path = '/users';
                 arg = { user: user };
             } else {
+                console.log('ONLY FOR paid users');
+                return done(UNAUTH());
                 path = '/users';
                 arg = { random: true };
             }
