@@ -51,6 +51,7 @@ module.exports = {
 
         var _ = this;
         _.user = user;
+        _.basicAuth = user.accessToken;
         cookies.set(COOKIE_NAME)
         done(void(0), _.user);
     },
@@ -61,6 +62,8 @@ module.exports = {
         var _ = this;
 
         _.failed = true;
+        _.basicAuth = void(0);
+
         cookies.erase(COOKIE_NAME);
     },
 };

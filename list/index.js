@@ -69,7 +69,7 @@ var CustomElement = require('generate-js-custom-element'),
                         index = todos.indexOf(todo);
 
                     todos.splice(index, 1);
-                    app.get('api').saveLocal();
+                    app.get('api').save();
                     app.update();
                 }
             };
