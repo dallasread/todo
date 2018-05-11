@@ -2,6 +2,18 @@ function clone(item) {
     return JSON.parse(JSON.stringify(item));
 }
 
+function SORT_TODOS(a, b) {
+    if (a.priority > b.priority) {
+        return 1;
+    }
+
+    if (b.priority > a.priority) {
+        return -1;
+    }
+
+    return a.id > b.id ? 1 : -1;
+}
+
 var CustomElement = require('generate-js-custom-element'),
     bala = require('balajs'),
     Sortable = require('sortablejs'),
@@ -30,7 +42,7 @@ var CustomElement = require('generate-js-custom-element'),
 
             return todos.filter(function(t) {
                 return t.todo_id === todo.id;
-            });
+            }).sort(SORT_TODOS);
         },
 
         addItem: function addItem(list) {
@@ -83,8 +95,25 @@ var CustomElement = require('generate-js-custom-element'),
 
     CustomElement.call(_, options);
 
-    Sortable.create(bala('.todos', _.element)[0], {
-        // animation: 50
+    var sortable = Sortable.create(bala('.todos', _.element)[0], {
+        animation: 150,
+        onEnd: function onEnd() {
+            var ids = sortable.toArray(),
+                todo, id;
+
+            for (var i = 0; i < ids.length; i++) {
+                id = ids[i];
+                todo = _.get('app').get('todos').find(function(t) {
+                    return t.id + '' === id;
+                });
+
+                if (todo) {
+                    todo.priority = i;
+                }
+            }
+
+            todo.saveLocal();
+        }
     });
 });
 

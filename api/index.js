@@ -10,7 +10,7 @@ var API = Generator.generate(function API(options) {
 });
 
 API.definePrototype({
-    sync: function sync(ignoreSaved, done) {
+    sync: function sync(done) {
         var _ = this;
 
         async.eachSeries(_.app.get('todos'), function(todo, next) {

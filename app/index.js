@@ -21,7 +21,7 @@ var App = CustomElement.createElement({
     CustomElement.call(_, options);
 
     _.fetchLocalTodos(function() {
-        _.get('api').sync(true);
+        _.get('api').sync();
     });
 });
 

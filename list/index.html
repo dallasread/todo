@@ -7,12 +7,12 @@
                 </a>
             {{/if}}
 
-            <input type="text" disabled::{{!todo.id}} value::{{todo.title}} oninput::{{@set(todo, 'title')}}>
+            <input type="text" disabled::{{!todo.id}} value::{{todo.title}} oninput::{{@set(app, 'title', undefined, todo)}}>
         </h1>
 
         <ul class="todos">
             {{#each @findTodos(todo, todos)}}
-                <li>
+                <li data-id="{{id}}">
                     <a href="#" onclick::{{@setTodo(app, this)}} class="go">
                         &raquo;
                     </a>
