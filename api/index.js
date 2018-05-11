@@ -23,33 +23,33 @@ API.definePrototype({
 
         var _ = this;
 
-        todos = todos || app.get('todos', void(0), []);
+        todos = todos || _.app.get('todos', void(0), []);
 
-        _.saveLocal(todos, function() {
-            _.saveRemote(todos, function(err) {
+        _.saveToLocal(todos, function() {
+            _.saveToRemote(todos, function(err) {
                 if (err) {
                     return (done || EMPTY_FUNC)(err);
                 }
 
-                _.saveLocal(todos, done);
+                _.saveToLocal(todos, done);
             });
         });
     },
 
-    saveLocal: function saveLocal(todos, done) {
-        if (this.debug) console.debug('saveLocal', arguments);
+    saveToLocal: function saveToLocal(todos, done) {
+        if (this.debug) console.debug('saveToLocal', arguments);
 
         var _ = this;
 
         _.localStore.set('todos', _.app.get('todos'), done);
     },
 
-    saveRemote: function saveRemote(todos, done) {
-        if (this.debug) console.debug('saveRemote', arguments);
+    saveToRemote: function saveToRemote(todos, done) {
+        if (this.debug) console.debug('saveToRemote', arguments);
 
         var _ = this;
 
-        todos = (todos || app.get('todos', void(0), [])).filter(CHANGED_TODOS);
+        todos = (todos || _.app.get('todos', void(0), [])).filter(CHANGED_TODOS);
 
         _.remoteStore.authenticate(function(err, data) {
             if (err) {
@@ -58,13 +58,13 @@ API.definePrototype({
             }
 
             async.eachSeries(todos, function(todo, next) {
-                _._saveRemoteSingle(todo, next);
+                _._saveToRemoteSingle(todo, next);
             }, done || EMPTY_FUNC);
         });
     },
 
-    _saveRemoteSingle: function _saveRemoteSingle(todo, done) {
-        if (this.debug) console.debug('_saveRemoteSingle', arguments);
+    _saveToRemoteSingle: function _saveToRemoteSingle(todo, done) {
+        if (this.debug) console.debug('_saveToRemoteSingle', arguments);
 
         var _ = this,
             isPersisted = todo.isPersisted(),
@@ -93,8 +93,8 @@ API.definePrototype({
 });
 
 API.definePrototype({
-    restoreLocal: function restoreLocal(done) {
-        if (this.debug) console.debug('restoreLocal', arguments);
+    restoreFromLocal: function restoreFromLocal(done) {
+        if (this.debug) console.debug('restoreFromLocal', arguments);
 
         var _ = this;
 
@@ -104,8 +104,6 @@ API.definePrototype({
                     todos[i] = new Todo(_.app, todos[i]);
                 }
             }
-
-            _.app.set('todos', todos || []);
 
             if (typeof done === 'function') {
                 done(err, todos);

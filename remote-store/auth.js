@@ -32,7 +32,7 @@ module.exports = {
                 arg = { user: user };
             } else {
                 path = '/users';
-                arg = { user: 'RANDOMUSER' };
+                arg = { random: true };
             }
 
             _[method](path, arg, function(err, data) {

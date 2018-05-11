@@ -19,12 +19,29 @@ var App = CustomElement.createElement({
 
     CustomElement.call(_, options);
 
-    _.get('api').restoreLocal(function() {
-        _.get('api').saveRemote();
+    window.ononline = function onlineStatusChange() {
+        _.syncAPI();
+    }
+
+    _.get('api').restoreFromLocal(function(err, todos) {
+        _.set('todos', todos || []);
+        _.syncAPI();
     });
 });
 
 App.definePrototype({
+    syncAPI: function syncAPI() {
+        var _ = this,
+            api = _.get('api');
+
+        api.saveToRemote(void(0), function() {
+            api.restoreFromRemote(function(err, todos) {
+                todos = todos || [];
+                _.set('todos', todos);
+                api.saveToLocal(todos);
+            });
+        });
+    },
 });
 
 module.exports = App;
