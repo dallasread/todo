@@ -34,71 +34,29 @@ API.definePrototype({
         } else if (_.failed) {
             done(UNAUTH());
         } else {
-            var func = 'createRandomUser',
-                arg;
+            var method = 'post',
+                path, arg;
 
             if (!'!HASCOOKIE') {
-                func = 'authByCookie';
-                arg = 'COOKIE';
+                path = '/';
+                arg = { cookie: cookie };
             } else if (user) {
-                func = 'authByUser';
-                arg = user;
+                path = '/users';
+                arg = { user: user };
+            } else {
+                path = '/users';
+                arg = { user: 'RANDOMUSER' };
             }
 
-            _[func](arg, function(err, data) {
+            _.remoteStore[method](path, arg, function(err, data) {
                 if (err) {
                     _.unSetUser();
                     return done(UNAUTH());
                 }
 
-                done(void(0), data);
+                _.setUser(data, done);
             });
         }
-    },
-
-    createRandomUser: function createRandomUser(__, done) {
-        if (this.debug) console.debug('createRandomUser', arguments);
-
-        var _ = this;
-
-        _.remoteStore.post('/users', { user: 'RANDOMUSER' }, function(err, data) {
-            if (err) {
-                (done || EMPTY_FUNC)(err);
-                return;
-            }
-
-            _.setUser(data, done);
-        });
-    },
-
-    authByCookie: function authByCookie(cookie, done) {
-        if (this.debug) console.debug('authByCookie', arguments);
-
-        var _ = this;
-
-        _.remoteStore.post('/auth', { cookie: cookie }, function(err, data) {
-            if (err) {
-                (done || EMPTY_FUNC)(err);
-                return;
-            }
-
-            _.setUser(data, done);
-        });
-    },
-
-    authByUser: function authByUser(user, done) {
-        if (this.debug) console.debug('authByUser', arguments);
-
-        var _ = this;
-
-        _.remoteStore.post('/users', { user: user }, function(err, data) {
-            if (err) {
-                (done || EMPTY_FUNC)(err);
-                return;
-            }
-
-            _.setUser(data, done);
-        });
     },
 
     setUser: function setUser(user, done) {
