@@ -1,5 +1,4 @@
 function EMPTY_FUNC() {}
-function UNAUTH() { return new Error('Could not authenticate.'); }
 
 function CHANGED_TODOS(todo) {
     return !todo.isPersisted() || todo.isChanged();
@@ -16,66 +15,6 @@ var API = Generator.generate(function API(options) {
     options.debug = true;
 
     _.defineProperties(options);
-});
-
-API.definePrototype({
-    authenticate: function authenticate(user, done) {
-        if (this.debug) console.debug('authenticate', arguments);
-
-        var _ = this;
-
-        if (typeof user === 'function') {
-            done = user;
-            user = void(0);
-        }
-
-        if (_.user) {
-            done(void(0), _.user);
-        } else if (_.failed) {
-            done(UNAUTH());
-        } else {
-            var method = 'post',
-                path, arg;
-
-            if (!'!HASCOOKIE') {
-                path = '/';
-                arg = { cookie: cookie };
-            } else if (user) {
-                path = '/users';
-                arg = { user: user };
-            } else {
-                path = '/users';
-                arg = { user: 'RANDOMUSER' };
-            }
-
-            _.remoteStore[method](path, arg, function(err, data) {
-                if (err) {
-                    _.unSetUser();
-                    return done(UNAUTH());
-                }
-
-                _.setUser(data, done);
-            });
-        }
-    },
-
-    setUser: function setUser(user, done) {
-        if (this.debug) console.debug('setUser', arguments);
-
-        var _ = this;
-        _.user = user;
-        'SETCOOKIE'
-        done(void(0), _.user);
-    },
-
-    unSetUser: function unSetUser() {
-        if (this.debug) console.debug('unSetUser', arguments);
-
-        var _ = this;
-
-        _.failed = true;
-        'UNSETCOOKIE';
-    },
 });
 
 API.definePrototype({
@@ -103,10 +42,8 @@ API.definePrototype({
         var _ = this;
 
         _.localStore.set('todos', _.app.get('todos'), done);
-    }
-});
+    },
 
-API.definePrototype({
     saveRemote: function saveRemote(todos, done) {
         if (this.debug) console.debug('saveRemote', arguments);
 
@@ -114,7 +51,7 @@ API.definePrototype({
 
         todos = (todos || app.get('todos', void(0), [])).filter(CHANGED_TODOS);
 
-        _.authenticate(function(err, data) {
+        _.remoteStore.authenticate(function(err, data) {
             if (err) {
                 if (_.debug) console.error(err);
                 return;

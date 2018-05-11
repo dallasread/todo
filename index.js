@@ -1,9 +1,9 @@
 var App = require('./app'),
     API = require('./api'),
     LocalStore = require('./local-store'),
-    RESTStore = require('./rest-store'),
+    RemoteStore = require('./remote-store'),
     localStore = new LocalStore(),
-    restStore = new RESTStore(),
+    restStore = new RemoteStore(),
     api = new API({
         localStore: localStore,
         remoteStore: restStore
