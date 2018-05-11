@@ -30,7 +30,7 @@
             <ul class="new-item">
                 <li>
                     <form onsubmit::{{@add(app, list, todo)}}>
-                        <input type="text" value::{{newTodo.title}} onblur::{{@set(list, 'newTodo.title')}} onblur::{{@add(app, list, todo, 1)}}>
+                        <input type="text" value::{{newTodo.title}} oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(app, list, todo, 1)}}>
                     </form>
                 </li>
             </ul>

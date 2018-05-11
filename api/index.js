@@ -1,4 +1,5 @@
 function EMPTY_FUNC() {}
+function UNAUTH() { return new Error('Could not authenticate.'); }
 
 function CHANGED_TODOS(todo) {
     return !todo.isPersisted() || todo.isChanged();
@@ -11,85 +12,168 @@ var Generator = require('generate-js'),
 var API = Generator.generate(function API(options) {
     var _ = this;
 
+    options = options || {};
+    options.debug = true;
+
     _.defineProperties(options);
 });
 
 API.definePrototype({
-    login: function login(user, done) {
+    authenticate: function authenticate(user, done) {
+        if (this.debug) console.debug('authenticate', arguments);
+
         var _ = this;
 
         if (typeof user === 'function') {
-            user = void(0);
             done = user;
+            user = void(0);
         }
 
         if (_.user) {
             done(void(0), _.user);
         } else if (_.failed) {
-            done(new Error('You are not logged in.'));
-        } else if (HASCOOKIE) {
+            done(UNAUTH());
+        } else {
+            var func = 'createRandomUser',
+                arg;
 
-        } else if (user) {
-            _.post('/users', { user: user }, function(err, data) {
+            if (!'!HASCOOKIE') {
+                func = 'authByCookie';
+                arg = 'COOKIE';
+            } else if (user) {
+                func = 'authByUser';
+                arg = user;
+            }
+
+            _[func](arg, function(err, data) {
                 if (err) {
-                    _.failed = true;
-                    return done(new Error('Unable to login.'));
+                    _.unSetUser();
+                    return done(UNAUTH());
                 }
 
-                _.user = data;
-                done(void(0), _.user);
+                done(void(0), data);
             });
         }
+    },
+
+    createRandomUser: function createRandomUser(__, done) {
+        if (this.debug) console.debug('createRandomUser', arguments);
+
+        var _ = this;
+
+        _.remoteStore.post('/users', { user: 'RANDOMUSER' }, function(err, data) {
+            if (err) {
+                (done || EMPTY_FUNC)(err);
+                return;
+            }
+
+            _.setUser(data, done);
+        });
+    },
+
+    authByCookie: function authByCookie(cookie, done) {
+        if (this.debug) console.debug('authByCookie', arguments);
+
+        var _ = this;
+
+        _.remoteStore.post('/auth', { cookie: cookie }, function(err, data) {
+            if (err) {
+                (done || EMPTY_FUNC)(err);
+                return;
+            }
+
+            _.setUser(data, done);
+        });
+    },
+
+    authByUser: function authByUser(user, done) {
+        if (this.debug) console.debug('authByUser', arguments);
+
+        var _ = this;
+
+        _.remoteStore.post('/users', { user: user }, function(err, data) {
+            if (err) {
+                (done || EMPTY_FUNC)(err);
+                return;
+            }
+
+            _.setUser(data, done);
+        });
+    },
+
+    setUser: function setUser(user, done) {
+        if (this.debug) console.debug('setUser', arguments);
+
+        var _ = this;
+        _.user = user;
+        'SETCOOKIE'
+        done(void(0), _.user);
+    },
+
+    unSetUser: function unSetUser() {
+        if (this.debug) console.debug('unSetUser', arguments);
+
+        var _ = this;
+
+        _.failed = true;
+        'UNSETCOOKIE';
     },
 });
 
 API.definePrototype({
     save: function save(todos, done) {
+        if (this.debug) console.debug('save', arguments);
+
         var _ = this;
 
-        todos = todos || _.app.get('todos');
+        todos = todos || app.get('todos', void(0), []);
 
         _.saveLocal(todos, function() {
-            _.saveRemote(todos, function() {
+            _.saveRemote(todos, function(err) {
+                if (err) {
+                    return (done || EMPTY_FUNC)(err);
+                }
+
                 _.saveLocal(todos, done);
             });
         });
     },
 
     saveLocal: function saveLocal(todos, done) {
+        if (this.debug) console.debug('saveLocal', arguments);
+
         var _ = this;
 
         _.localStore.set('todos', _.app.get('todos'), done);
-    },
-
-    saveRemote: function saveRemote(todos, done) {
-        var _ = this;
-
-        todos = (todos || _.app.get('todos')).filter(CHANGED_TODOS);
-
-        _.login(function(err, data) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-
-            async.eachSeries(todos, function(todo, next) {
-                _.saveTodo(todo, next);
-            }, done || EMPTY_FUNC);
-        });
     }
 });
 
 API.definePrototype({
-    saveTodo: function saveTodo(todo, done) {
+    saveRemote: function saveRemote(todos, done) {
+        if (this.debug) console.debug('saveRemote', arguments);
+
+        var _ = this;
+
+        todos = (todos || app.get('todos', void(0), [])).filter(CHANGED_TODOS);
+
+        _.authenticate(function(err, data) {
+            if (err) {
+                if (_.debug) console.error(err);
+                return;
+            }
+
+            async.eachSeries(todos, function(todo, next) {
+                _._saveRemoteSingle(todo, next);
+            }, done || EMPTY_FUNC);
+        });
+    },
+
+    _saveRemoteSingle: function _saveRemoteSingle(todo, done) {
+        if (this.debug) console.debug('_saveRemoteSingle', arguments);
+
         var _ = this,
             isPersisted = todo.isPersisted(),
             oldId = !isPersisted ? _.id : void(0);
-
-        if (!_.user) {
-            done();
-            return _;
-        }
 
         _.remoteStore[isPersisted ? 'patch' : 'post']({
             todo: _.toJSON()
@@ -106,7 +190,6 @@ API.definePrototype({
                 });
             }
 
-            _.saveLocal();
             _.persistedJSON = todo.toJSON();
         });
 
@@ -116,6 +199,8 @@ API.definePrototype({
 
 API.definePrototype({
     restoreLocal: function restoreLocal(done) {
+        if (this.debug) console.debug('restoreLocal', arguments);
+
         var _ = this;
 
         _.localStore.get('todos', function(err, todos) {
@@ -125,7 +210,7 @@ API.definePrototype({
                 }
             }
 
-            _.app.set('todos', todos);
+            _.app.set('todos', todos || []);
 
             if (typeof done === 'function') {
                 done(err, todos);

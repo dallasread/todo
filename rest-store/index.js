@@ -10,7 +10,7 @@ var RESTStore = Generator.generate(function RESTStore(options) {
     options = options || {};
 
     _.defineProperties({
-        url: options.url || 'https://api.clarity.com'
+        url: options.url || '*'
     });
 
     _.defineProperties({
@@ -22,10 +22,6 @@ var RESTStore = Generator.generate(function RESTStore(options) {
     });
 
     _.accessToken = typeof options.accessToken !== 'undefined' ? options.accessToken : cookies.get(_.cookieName());
-    _.segments = [
-        { data: { name: 'Everyone' } },
-        { data: { name: 'Online', filters: { '0': { key: 'online', matcher: '~', value: true } } } }
-    ];
 });
 
 RESTStore.definePrototype({
@@ -105,35 +101,7 @@ RESTStore.definePrototype({
         var _ = this;
 
         cookies.erase(_.cookieName());
-    },
-
-    track: function track(action, event, cta, done) {
-        if (typeof cta === 'function') {
-            done = cta;
-            cta = void(0);
-        }
-
-        event = typeof event === 'object' ? event : {};
-
-        var _ = this;
-
-        event.data = typeof event.data === 'object' ? event.data : {};
-        event.data.action = action;
-
-        event.context = typeof event.context === 'object' ? event.context : {};
-
-        if (cta) {
-            event.context.cta = { id: cta.get('cta.id') };
-        }
-
-        event.context.page = window.location.href;
-
-        _.post('/events', {
-            event: event
-        }, done);
-
-        return event;
-    },
+    }
 });
 
 RESTStore.definePrototype({
@@ -160,13 +128,15 @@ RESTStore.definePrototype({
                         if (err) {
                             if (err.responseJSON) {
                                 err = err.responseJSON;
-                            } else if (err.response) {
+                            } else if (typeof err.response !== 'undefined') {
                                 try {
                                     err = JSON.parse(err.response);
-                                } catch(e) {}
+                                } catch(e) {
+                                    err = err.response;
+                                }
                             }
 
-                            return done(err);
+                            return done(err || new Error('Invalid response format.'));
                         }
                     }
                 }

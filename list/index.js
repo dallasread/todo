@@ -57,7 +57,6 @@ var CustomElement = require('generate-js-custom-element'),
         setTodo: function setTodo(app, todo, todos, id) {
             return function doSetTodo(event) {
                 if (event.target.tagName === 'INPUT') return;
-
                 app.set('back', todo.parent());
                 app.set('todo', todo);
             };

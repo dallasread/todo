@@ -45,9 +45,7 @@ Todo.definePrototype({
 
     save: function save() {
         var _ = this;
-
         _.app.get('api').save([_]);
-
         return _;
     },
 
