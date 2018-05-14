@@ -24,8 +24,6 @@ module.exports = {
             var method = 'post',
                 path, arg;
 
-            alert('getcookie: ' + cookies.get(COOKIE_NAME));
-
             if (cookies.get(COOKIE_NAME)) {
                 path = '/';
                 method = 'get';
@@ -60,7 +58,6 @@ module.exports = {
         _.basicAuth = user.access_token;
 
         cookies.set(COOKIE_NAME, _.basicAuth, { expires: 365 * 25 });
-        alert('setcookie: ' + COOKIE_NAME + ':' + _.basicAuth);
 
         done(void(0), _.user);
     },
