@@ -3,7 +3,7 @@ function UNAUTH() { return new Error('Could not authenticate.'); }
 var cookies = require('browser-cookies'),
     COOKIE_NAME = 'clarity-access-token';
 
-cookies.defaults.domain = window.location.hostname.split('.').slice(-2).join('.');
+// cookies.defaults.domain = window.location.hostname.split('.').slice(-2).join('.');
 
 module.exports = {
     authenticate: function authenticate(user, done) {
