@@ -26,13 +26,14 @@ module.exports = {
 
             if (cookies.get(COOKIE_NAME)) {
                 path = '/';
-                arg = { cookie: cookies.get(COOKIE_NAME) };
+                method = 'get';
+                _.basicAuth = cookies.get(COOKIE_NAME);
             } else if (user) {
                 path = '/users';
                 arg = { user: user };
             } else {
-                console.log('ONLY FOR paid users');
-                return done(UNAUTH());
+                // console.log('ONLY FOR paid users');
+                // return done(UNAUTH());
                 path = '/users';
                 arg = { random: true };
             }
@@ -51,17 +52,20 @@ module.exports = {
     setUser: function setUser(user, done) {
         if (this.debug) console.debug('setUser', arguments);
 
-        var _ = this;
+        var _ = this;
+
         _.user = user;
-        _.basicAuth = user.accessToken;
-        cookies.set(COOKIE_NAME)
+        _.basicAuth = user.access_token;
+
+        cookies.set(COOKIE_NAME, _.basicAuth, { expires: 365 * 25 });
+
         done(void(0), _.user);
     },
 
     unSetUser: function unSetUser() {
         if (this.debug) console.debug('unSetUser', arguments);
 
-        var _ = this;
+        var _ = this;
 
         _.failed = true;
         _.basicAuth = void(0);

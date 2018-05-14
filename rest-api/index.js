@@ -35,7 +35,7 @@ RESTAPI.definePrototype({
                 async: async,
                 beforeSend: function(xhr) {
                     if (!_.basicAuth) return;
-                    xhr.setRequestHeader('Authorization', 'Basic ' + _.basicAuth);
+                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(_.basicAuth));
                 },
                 success: function success(response) {
                     if (typeof done === 'function') {

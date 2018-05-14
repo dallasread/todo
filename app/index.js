@@ -14,14 +14,14 @@ var App = CustomElement.createElement({
     options.data = options.data || {};
     options.data.app = _;
     options.data.api = options.api;
-    options.data.defaultTodo = new Todo(_, { title: 'Clarity' });
+    options.data.defaultTodo = new Todo(_, { id: null, title: 'Clarity' });
     options.data.todo = options.data.defaultTodo;
 
     CustomElement.call(_, options);
 
     window.ononline = function onlineStatusChange() {
         _.syncAPI();
-    }
+    };
 
     _.get('api').restoreFromLocal(function(err, todos) {
         _.set('todos', todos || []);
@@ -36,9 +36,8 @@ App.definePrototype({
 
         api.saveToRemote(void(0), function() {
             api.restoreFromRemote(function(err, todos) {
-                todos = todos || [];
-                _.set('todos', todos);
-                api.saveToLocal(todos);
+                _.set('todos', todos || []);
+                api.saveToLocal(todos || []);
             });
         });
     },

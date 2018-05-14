@@ -8,6 +8,8 @@ var Todo = Generator.generate(function Todo(app, data) {
         app: app
     });
 
+    data.id = typeof data.id !== 'undefined' ? data.id : '_' + (Date.now() + Math.random());
+
     _.defineProperties({
         writable: true,
         enumerable: true
@@ -21,9 +23,9 @@ var Todo = Generator.generate(function Todo(app, data) {
 });
 
 Todo.definePrototype({
-    isPersisted: function isPersisted() {
+    isPersisted: function isPersisted(id) {
         var _ = this;
-        return !(typeof _.id === 'string' && INVALID_ID.test(_.id));
+        return !(typeof (id || _.id) === 'string' && INVALID_ID.test(id || _.id));
     },
 
     isChanged: function isChanged() {
@@ -33,7 +35,6 @@ Todo.definePrototype({
 
     addChild: function addChild(data) {
         data.todo_id = this.id;
-        data.id = '_' + (Date.now() + Math.random());
 
         var _ = this,
             todo = new Todo(_.app, data);
@@ -67,6 +68,8 @@ Todo.definePrototype({
             obj = {};
 
         for (var key in _) {
+            if (key === 'id' && !_.isPersisted()) continue;
+            if (key === 'todo_id' && !_.isPersisted(_[key])) continue;
             obj[key] = _[key];
         }
 

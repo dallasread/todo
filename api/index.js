@@ -54,12 +54,14 @@ API.definePrototype({
         _.remoteStore.authenticate(function(err, data) {
             if (err) {
                 if (_.debug) console.error(err);
-                return;
+                return (done || EMPTY_FUNC)(err);
             }
 
             async.eachSeries(todos, function(todo, next) {
                 _._saveToRemoteSingle(todo, next);
-            }, done || EMPTY_FUNC);
+            }, function() {
+                (done || EMPTY_FUNC)(void(0), todos);
+            });
         });
     },
 
@@ -70,9 +72,13 @@ API.definePrototype({
             isPersisted = todo.isPersisted(),
             oldId = !isPersisted ? _.id : void(0);
 
-        _.remoteStore[isPersisted ? 'patch' : 'post']({
-            todo: _.toJSON()
+        _.remoteStore[isPersisted ? 'patch' : 'post']('/todos' + (isPersisted ? '/' + todo.id : ''), {
+            todo: todo.toJSON()
         }, function(err, data) {
+            if (err) {
+                return done(err);
+            }
+
             for (var key in data) {
                 todo[key] = data[key];
             }
@@ -86,6 +92,8 @@ API.definePrototype({
             }
 
             _.persistedJSON = todo.toJSON();
+
+            done(void(0), todo);
         });
 
         return _;
@@ -109,7 +117,30 @@ API.definePrototype({
                 done(err, todos);
             }
         });
-    }
+    },
+
+    restoreFromRemote: function restoreFromRemote(done) {
+        var _ = this;
+
+        _.remoteStore.authenticate(function(err, data) {
+            if (err) {
+                if (_.debug) console.error(err);
+                return (done || EMPTY_FUNC)(err);
+            }
+
+            _.remoteStore.get('/todos', void(0), function(err, todos) {
+                if (todos) {
+                    for (var i = todos.length - 1; i >= 0; i--) {
+                        todos[i] = new Todo(_.app, todos[i]);
+                    }
+                }
+
+                if (typeof done === 'function') {
+                    done(err, todos);
+                }
+            });
+        });
+    },
 });
 
 module.exports = API;
