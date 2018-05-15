@@ -50,6 +50,15 @@ Todo.definePrototype({
         return _;
     },
 
+    destroy: function destroy() {
+        var _ = this;
+
+        _._deleted = true;
+        _.app.get('api').save([_]);
+
+        return _;
+    },
+
     parent: function parent() {
         var _ = this,
             todos = _.app.get('todos');

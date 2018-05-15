@@ -58,7 +58,15 @@ API.definePrototype({
             }
 
             async.eachSeries(todos, function(todo, next) {
-                _._saveToRemoteSingle(todo, next);
+                if (todo._deleted) {
+                    if (todo.isPersisted()) {
+                        _._deleteFromRemoteSingle(todo, function(err) {
+                            next();
+                        });
+                    }
+                } else {
+                    _._saveToRemoteSingle(todo, next);
+                }
             }, function() {
                 (done || EMPTY_FUNC)(void(0), todos);
             });
@@ -97,7 +105,17 @@ API.definePrototype({
         });
 
         return _;
-    }
+    },
+
+    _deleteFromRemoteSingle: function _deleteFromRemoteSingle(todo, done) {
+        var _ = this;
+
+        if (!todo.isPersisted()) {
+            return done(new Error('Invalid ID.'));
+        }
+
+        _.remoteStore.delete('/todos/' + todo.id, void(0), done);
+    },
 });
 
 API.definePrototype({
@@ -140,7 +158,7 @@ API.definePrototype({
                 }
             });
         });
-    },
+    }
 });
 
 module.exports = API;

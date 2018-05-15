@@ -23,6 +23,11 @@ RESTAPI.definePrototype({
         var _ = this;
         _.request('patch', path, data, done);
     },
+
+    delete: function _delete(path, data, done) {
+        var _ = this;
+        _.request('delete', path, data, done);
+    },
 });
 
 RESTAPI.definePrototype({

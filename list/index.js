@@ -27,8 +27,10 @@ var CustomElement = require('generate-js-custom-element'),
                 if (list.get('newTodo.title') && list.get('newTodo.title').length) {
                     var todo = parent.addChild( clone(list.get('newTodo')) );
 
-                    list.set('newTodo.title', '');
+                    todo.priority = 9999999;
                     todo.save();
+
+                    list.set('newTodo.title', '');
                 }
 
                 if (unsetIsAdding) {
@@ -43,7 +45,7 @@ var CustomElement = require('generate-js-custom-element'),
             if (!todos) return [];
 
             return todos.filter(function(t) {
-                return t.todo_id === todo.id;
+                return !t._deleted && t.todo_id === todo.id;
             }).sort(SORT_TODOS);
         },
 
@@ -65,11 +67,7 @@ var CustomElement = require('generate-js-custom-element'),
         deleteTodo: function deleteTodo(app, todo) {
             return function doDeleteTodo(event) {
                 if (confirm('Are you sure you want to delete this todo?')) {
-                    var todos = app.get('todos'),
-                        index = todos.indexOf(todo);
-
-                    todos.splice(index, 1);
-                    app.get('api').save();
+                    todo.destroy();
                     app.update();
                 }
             };
