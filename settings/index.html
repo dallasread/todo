@@ -17,14 +17,36 @@
         </h1>
 
         <ul class="todos">
-            <li><input type="text" value="Log In"></li>
             <li>
-                <label>To access your lists on another device,</label>
+                <label>For access from other devices,</label>
                 <input type="text" value="Upgrade Now">
             </li>
 
-            <li><input type="text" value="Change My Password"></li>
-            <li><input type="text" value="Log Out"></li>
+            <li class="styleless"></li>
+
+            <li>
+                <label>Already upgraded?</label>
+                <input type="text" value="Log In">
+            </li>
+
+            <li class="styleless"></li>
+
+            <li>
+                <label>Current API Key</label>
+                <input type="text" value::{{app.data.api.remoteStore.basicAuth}}>
+            </li>
+
+            <!-- <li class="styleless">
+                <button>Save Profile</button>
+            </li> -->
+
+            <!-- <li>
+                <input type="text" value="Change My Password">
+            </li>
+
+            <li>
+                <input type="text" value="Log Out">
+            </li> -->
 
             <!-- <li>
                 <label>What's your email address?</label>
@@ -34,9 +56,6 @@
             <li>
                 <label>Choose a password:</label>
                 <input type="text">
-            </li>
-            <li class="styleless">
-                <button>Save Profile</button>
             </li> -->
         </ul>
     {{/with}}
