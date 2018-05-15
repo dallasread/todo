@@ -5,6 +5,12 @@
                 <a href="#" onclick::{{@setTodo(app, back)}} class="back">
                     |||
                 </a>
+            {{else}}
+                {{#if todo.cog}}
+                    <a href="#" onclick::{{@setTodo(app, todo.cog)}} class="cog">
+                        o
+                    </a>
+                {{/if}}
             {{/if}}
 
             <input type="text" disabled::{{!todo.id}} value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>

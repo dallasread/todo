@@ -8,7 +8,7 @@ var Todo = Generator.generate(function Todo(app, data) {
         app: app
     });
 
-    data.id = typeof data.id !== 'undefined' ? data.id : '_' + (Date.now() + Math.random());
+    data.id = typeof data.id !== 'undefined' ? data.id : (Date.now() + Math.random()) + '_';
 
     _.defineProperties({
         writable: true,

@@ -5,7 +5,8 @@ var App = CustomElement.createElement({
     template: require('./index.html'),
     transforms: {},
     components: {
-        list: require('../list')
+        list: require('../list'),
+        settings: require('../settings')
     }
 }, function App(options) {
     var _ = this;
@@ -14,7 +15,15 @@ var App = CustomElement.createElement({
     options.data = options.data || {};
     options.data.app = _;
     options.data.api = options.api;
-    options.data.defaultTodo = new Todo(_, { id: null, title: 'Clarity' });
+    options.data.defaultTodo = new Todo(_, {
+        id: null,
+        title: 'Clarity',
+        cog: new Todo(_, {
+            title: 'Settings',
+            settings: true
+        })
+    });
+
     options.data.todo = options.data.defaultTodo;
 
     CustomElement.call(_, options);

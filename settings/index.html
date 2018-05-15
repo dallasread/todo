@@ -1,0 +1,45 @@
+<div class="list">
+    {{#with todo=todo todos=todos app=app back=back}}
+        <h1>
+            {{#if back}}
+                <a href="#" onclick::{{@setTodo(app, back)}} class="back">
+                    |||
+                </a>
+            {{else}}
+                {{#if todo.cog}}
+                    <a href="#" onclick::{{@setTodo(app, todo.cog)}} class="cog">
+                        o
+                    </a>
+                {{/if}}
+            {{/if}}
+
+            <input type="text" disabled::{{!todo.id}} value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
+        </h1>
+
+        <ul class="todos">
+            <li><input type="text" value="Log In"></li>
+            <li>
+                <label>To access your lists on another device,</label>
+                <input type="text" value="Upgrade Now">
+            </li>
+
+            <li><input type="text" value="Change My Password"></li>
+            <li><input type="text" value="Log Out"></li>
+
+            <!-- <li>
+                <label>What's your email address?</label>
+                <input type="text">
+            </li>
+            <li><input type="text" value="Choose A Password"></li>
+            <li>
+                <label>Choose a password:</label>
+                <input type="text">
+            </li>
+            <li class="styleless">
+                <button>Save Profile</button>
+            </li> -->
+        </ul>
+    {{/with}}
+</div>
+
+<div class="list-underlay"></div>
