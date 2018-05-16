@@ -85,6 +85,23 @@ var CustomElement = require('generate-js-custom-element'),
                 todo.save();
             };
         },
+
+        togglePin: function togglePin(app, todo) {
+            return function doTogglePin(event) {
+                if (typeof todo.pin === 'undefined') {
+                    todo.pin = 0;
+                } else {
+                    delete todo.pin;
+                }
+
+                todo.save();
+                app.update();
+            };
+        },
+
+        exists: function exists(value) {
+            return typeof value !== 'undefined';
+        },
     }
 }, function List(options) {
     var _ = this;

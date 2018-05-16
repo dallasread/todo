@@ -1,17 +1,9 @@
 <div class="list">
     {{#with todo=todo todos=todos app=app back=back}}
         <h1>
-            {{#if back}}
-                <a href="#" onclick::{{@setTodo(app, back)}} class="back">
-                    ▲
-                </a>
-            {{else}}
-                {{#if todo.cog}}
-                    <a href="#" onclick::{{@setTodo(app, todo.cog)}} class="cog">
-                        o
-                    </a>
-                {{/if}}
-            {{/if}}
+            <a href="#" onclick::{{@setTodo(app, back)}} class="back">
+                ▸
+            </a>
 
             <input type="text" disabled="disabled" value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
         </h1>
