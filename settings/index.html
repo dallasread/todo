@@ -13,7 +13,7 @@
                 {{/if}}
             {{/if}}
 
-            <input type="text" disabled::{{!todo.id}} value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
+            <input type="text" disabled="disabled" value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
         </h1>
 
         <ul class="todos">
