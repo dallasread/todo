@@ -3,12 +3,16 @@
         <h1>
             {{#if back}}
                 <a href="#" onclick::{{@setTodo(app, back)}} class="back">
-                    |||
+                    ▸
+                </a>
+
+                <a href="#" onclick::{{@togglePin(app, todo)}} class="cog {{#if @exists(todo.pin)}}pinned{{/if}}">
+                    ◉  🔒  🔓
                 </a>
             {{else}}
                 {{#if todo.cog}}
-                    <a href="#" onclick::{{@setTodo(app, todo.cog)}} class="cog">
-                        o
+                    <a href="#" onclick::{{@setTodo(app, todo.cog)}} class="back settings-back">
+                        ⚙
                     </a>
                 {{/if}}
             {{/if}}
@@ -20,7 +24,7 @@
             {{#each @findTodos(todo, todos)}}
                 <li data-id="{{id}}">
                     <a href="#" onclick::{{@setTodo(app, this)}} class="go">
-                        &raquo;
+                        ▸
                     </a>
 
                     <a href="#" onclick::{{@deleteTodo(app, this)}} class="delete">

@@ -17,7 +17,7 @@ var App = CustomElement.createElement({
     options.data.api = options.api;
     options.data.defaultTodo = new Todo(_, {
         id: null,
-        title: 'Clarity',
+        title: 'Todo',
         cog: new Todo(_, {
             title: 'Settings',
             settings: true

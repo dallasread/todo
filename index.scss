@@ -2,6 +2,8 @@
 
 $padding: 10px;
 $black: #000;
+$light-red: #c41313;
+$dark-red: #ad1111;
 
 body {
     font-size: 19px;
@@ -38,28 +40,40 @@ body {
 
         .back, .cog {
             position: absolute;
-            top: 0;
+            top: 3px;
             padding: $padding * 1.5 $padding;
             color: rgba(255, 255, 255, 0.5);
             background: $black;
+            font-size: 122%;
         }
 
         .back {
             right: $padding;
+            transform: rotate(-90deg);
+
+            &.settings-back {
+                right: 0;
+            }
         }
 
         .cog {
+            top: 6px;
             left: $padding;
+            font-size: 100%;
+
+            &.pinned {
+                color: $light-red;
+            }
         }
     }
 
     li {
         /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c41313+0,ad1111+100 */
-        background: #c41313; /* Old browsers */
-        background: -moz-linear-gradient(top,  #c41313 0%, #ad1111 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(top,  #c41313 0%,#ad1111 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to bottom,  #c41313 0%,#ad1111 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c41313', endColorstr='#ad1111',GradientType=0 ); /* IE6-9 */
+        background: $light-red; /* Old browsers */
+        background: -moz-linear-gradient(top,  $light-red 0%, $dark-red 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top,  $light-red 0%,$dark-red 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom,  $light-red 0%,$dark-red 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-red', endColorstr='$dark-red',GradientType=0 ); /* IE6-9 */
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         padding: $padding;
         position: relative;
