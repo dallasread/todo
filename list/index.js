@@ -3,11 +3,14 @@ function clone(item) {
 }
 
 function SORT_TODOS(a, b) {
-    if (a.priority > b.priority) {
+    var aP = a.pin !== null ? a.pin : a.priority,
+        bP = b.pin !== null ? b.pin : b.priority;
+
+    if (aP > bP) {
         return 1;
     }
 
-    if (b.priority > a.priority) {
+    if (bP > aP) {
         return -1;
     }
 
@@ -45,7 +48,13 @@ var CustomElement = require('generate-js-custom-element'),
             if (!todos) return [];
 
             return todos.filter(function(t) {
-                return !t._deleted && t.todo_id === todo.id;
+                return !t._deleted && (
+                    t.todo_id === todo.id ||
+                    (
+                        !todo.id &&
+                        t.pin !== null
+                    )
+                );
             }).sort(SORT_TODOS);
         },
 
@@ -88,10 +97,10 @@ var CustomElement = require('generate-js-custom-element'),
 
         togglePin: function togglePin(app, todo) {
             return function doTogglePin(event) {
-                if (typeof todo.pin === 'undefined') {
+                if (todo.pin === null) {
                     todo.pin = 0;
                 } else {
-                    delete todo.pin;
+                    todo.pin = null;
                 }
 
                 todo.save();
@@ -100,7 +109,7 @@ var CustomElement = require('generate-js-custom-element'),
         },
 
         exists: function exists(value) {
-            return typeof value !== 'undefined';
+            return value !== null;
         },
     }
 }, function List(options) {
@@ -119,7 +128,7 @@ List.definePrototype({
         var _ = this,
             sortable = Sortable.create(bala('.todos', _.element)[0], {
             animation: 150,
-            delay: 150,
+            delay: 50,
             onEnd: function onEnd() {
                 var ids = sortable.toArray(),
                     todos = [],
@@ -134,7 +143,11 @@ List.definePrototype({
                     todos.push(todo);
 
                     if (todo) {
-                        todo.priority = i;
+                        if (todo.pin === null) {
+                            todo.priority = i;
+                        } else {
+                            todo.pin = i;
+                        }
                     }
                 }
 
