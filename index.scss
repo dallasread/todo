@@ -4,6 +4,7 @@ $padding: 10px;
 $black: #000;
 $light-red: #c41313;
 $dark-red: #ad1111;
+$darker-red: #8F0F0F;
 
 body {
     font-size: 19px;
@@ -77,6 +78,11 @@ body {
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         padding: $padding;
         position: relative;
+
+        &.pinned {
+            border-left: $padding / 2 solid rgba(0, 0, 0, 0.3);
+            padding-left: $padding / 2;
+        }
 
         &.styleless {
             background: none;

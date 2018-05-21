@@ -2,11 +2,11 @@
     {{#with todo=todo todos=todos app=app back=back}}
         <h1>
             {{#if back}}
-                <a href="#" onclick::{{@setTodo(app, @exists(todo.pin) ? app.data.defaultTodo : back)}} class="back">
+                <a href="#" onclick::{{@setTodo(app, @hasPin(todo.pin) ? app.data.defaultTodo : back)}} class="back">
                     ▸
                 </a>
 
-                <a href="#" onclick::{{@togglePin(app, todo)}} class="cog {{#if @exists(todo.pin)}}pinned{{/if}}">
+                <a href="#" onclick::{{@togglePin(app, todo)}} class="cog {{#if @hasPin(todo.pin)}}pinned{{/if}}">
                     ◉<!--🔒🔓-->
                 </a>
             {{else}}
@@ -22,7 +22,7 @@
 
         <ul class="todos">
             {{#each @findTodos(todo, todos)}}
-                <li data-id="{{id}}">
+                <li data-id="{{id}}" class="{{@hasPin(pin) ? 'pinned' : ''}}">
                     <a href="#" onclick::{{@setTodo(app, this)}} class="go">
                         ▸
                     </a>

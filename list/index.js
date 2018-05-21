@@ -108,7 +108,7 @@ var CustomElement = require('generate-js-custom-element'),
             };
         },
 
-        exists: function exists(value) {
+        hasPin: function hasPin(value) {
             return value !== null;
         },
     }

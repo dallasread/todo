@@ -37,7 +37,7 @@ var App = CustomElement.createElement({
         _.syncAPI();
     });
 
-    setTimeout(function() {
+    setInterval(function() {
         _.syncAPI();
     }, 60000);
 });
