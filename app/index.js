@@ -36,6 +36,10 @@ var App = CustomElement.createElement({
         _.set('todos', todos || []);
         _.syncAPI();
     });
+
+    setTimeout(function() {
+        _.syncAPI();
+    }, 60000);
 });
 
 App.definePrototype({
