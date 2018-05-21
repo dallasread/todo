@@ -128,7 +128,7 @@ List.definePrototype({
         var _ = this,
             sortable = Sortable.create(bala('.todos', _.element)[0], {
             animation: 150,
-            delay: 50,
+            delay: 80,
             onEnd: function onEnd() {
                 var ids = sortable.toArray(),
                     todos = [],
