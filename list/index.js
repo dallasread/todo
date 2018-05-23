@@ -44,6 +44,10 @@ var CustomElement = require('generate-js-custom-element'),
             };
         },
 
+        isUnlocked: function isUnlocked() {
+            return false;
+        },
+
         findTodos: function findTodos(todo, todos) {
             if (!todos) return [];
 

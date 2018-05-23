@@ -1,5 +1,5 @@
 <div class="list">
-    {{#with todo=todo todos=todos app=app back=back keychain=keychain}}
+    {{#with todo=todo todos=todos app=app back=back keychain=keychain isUnlocked=@isUnlocked(keychain, todo)}}
         <h1>
             {{#if back}}
                 <a href="#" onclick::{{@setTodo(app, @hasPin(todo.pin) ? app.data.defaultTodo : back)}} class="back">
@@ -12,17 +12,17 @@
                     </a>
 
                     {{#if todo.has_password}}
-                        {{#if @isUnlocked(keychain, todo)}}
-                            <a href="#" onclick::{{@togglePin(app, todo)}} class="{{#if @hasPin(todo.pin)}}pinned{{/if}}">
-                                🔓
+                        {{#if isUnlocked}}
+                            <a href="#" onclick::{{@togglePin(app, todo)}}>
+                                🔒
                             </a>
                         {{else}}
-                            <a href="#" onclick::{{@togglePin(app, todo)}} class="{{#if @hasPin(todo.pin)}}pinned{{/if}}">
+                            <a href="#" onclick::{{@togglePin(app, todo)}}>
                                 🔒
                             </a>
                         {{/if}}
                     {{else}}
-                        <a href="#" onclick::{{@togglePin(app, todo)}} class="{{#if @hasPin(todo.pin)}}pinned{{/if}}">
+                        <a href="#" onclick::{{@togglePin(app, todo)}}>
                             🔓
                         </a>
                     {{/if}}
