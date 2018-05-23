@@ -1,5 +1,6 @@
 var App = require('./app'),
     API = require('./api'),
+    KeyChain = require('./key-chain'),
     LocalStore = require('./local-store'),
     RemoteStore = require('./remote-store'),
     localStore = new LocalStore(),
@@ -11,11 +12,16 @@ var App = require('./app'),
         remoteStore: restStore
     }),
     app = new App({
-        api: api
+        api: api,
+        keyChain: new KeyChain({
+            base: 'localSTORE.keychain.base',
+            keys: 'localSTORE.keychain.keys',
+        })
     });
 
 api.app = app;
 
 window.app = app;
+window.CryptoJS = require('crypto-js');
 
 document.body.appendChild(app.element);
