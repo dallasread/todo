@@ -62,7 +62,7 @@ body {
             left: $padding;
             font-size: 100%;
 
-            &.pinned {
+            .pinned {
                 color: $light-red;
             }
         }

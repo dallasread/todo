@@ -1,12 +1,14 @@
 var Generator = require('generate-js'),
     localforage = require('localforage');
 
-var LocalStore = Generator.generate(function LocalStore() {
+var LocalStore = Generator.generate(function LocalStore(options) {
     var _ = this;
+
+    if (!options.name) throw new Error('LocalStore `name` not supplied.');
 
     _.defineProperties({
 		db: localforage.createInstance({
-	        name: 'Clarity'
+	        name: options.name
 	    })
     });
 });
@@ -38,6 +40,11 @@ LocalStore.definePrototype({
 			_.set(key, data, done);
 		});
 	},
+
+    reset: function reset() {
+        var _ = this;
+        _.db.clear();
+    },
 });
 
 module.exports = LocalStore;
