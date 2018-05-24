@@ -9,10 +9,10 @@ var App = require('./app'),
     restStore = new RemoteStore({
         url: 'https://clearmind.herokuapp.com' || 'http://localhost:3000'
     }),
-    keyChain = new EncryptedStore({
+    keychain = new EncryptedStore({
         cookieName: 'clarity-keychain-salt',
         store: new LocalStore({
-            name: 'Clarity-KeyChain'
+            name: 'Clarity-Keychain'
         })
     }),
     api = new API({
@@ -21,12 +21,12 @@ var App = require('./app'),
     }),
     app = new App({
         api: api,
-        keyChain: keyChain
+        keychain: keychain
     });
 
 api.app = app;
 
 window.app = app;
-window.keyChain = keyChain;
+window.keychain = keychain;
 
 document.body.appendChild(app.element);

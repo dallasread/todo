@@ -31,6 +31,7 @@ var CustomElement = require('generate-js-custom-element'),
                     var todo = parent.addChild( clone(list.get('newTodo')) );
 
                     todo.priority = 9999999;
+                    todo.pin = null;
                     todo.save();
 
                     list.set('newTodo.title', '');
@@ -48,8 +49,22 @@ var CustomElement = require('generate-js-custom-element'),
             return false;
         },
 
+        askForPassword: function askForPassword() {
+        },
+
+        setPassword: function setPassword() {
+        },
+
+        forgetPassword: function forgetPassword(updater, keychain, todo, password) {
+        },
+
+        findParent: function findParent(todo, defaultTodo) {
+            if (!todo) return defaultTodo;
+            return todo.parent();
+        },
+
         findTodos: function findTodos(todo, todos) {
-            if (!todos) return [];
+            if (!todos || !todo) return [];
 
             return todos.filter(function(t) {
                 return !t._deleted && (
@@ -72,7 +87,7 @@ var CustomElement = require('generate-js-custom-element'),
         setTodo: function setTodo(app, todo, todos, id) {
             return function doSetTodo(event) {
                 if (event.target.tagName === 'INPUT') return;
-                app.set('back', todo.parent());
+                todo._isSettingPassword = false;
                 app.set('todo', todo);
             };
         },
@@ -96,6 +111,12 @@ var CustomElement = require('generate-js-custom-element'),
             return function doSetTodoInfo(event) {
                 todo[key] = event.target.value;
                 todo.save();
+            };
+        },
+
+        toggleTodo: function toggleTodo(updater, todo, attr) {
+            return function doToggleTodoInfo() {
+                updater.set(attr, !updater.get(attr, todo), todo);
             };
         },
 

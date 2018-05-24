@@ -1,5 +1,15 @@
 var CustomElement = require('generate-js-custom-element'),
-    Todo = require('../todo');
+    cookies = require('browser-cookies'),
+    Todo = require('../todo'),
+    SELECTED_TODO = 'clarity-selected';
+
+function findTodo(todos, id) {
+    id = id + '';
+
+    return todos.find(function(todo) {
+        return todo.id + '' === id;
+    });
+}
 
 var App = CustomElement.createElement({
     template: require('./index.html'),
@@ -15,6 +25,7 @@ var App = CustomElement.createElement({
     options.data = options.data || {};
     options.data.app = _;
     options.data.api = options.api;
+    options.data.keychain = options.keychain;
     options.data.defaultTodo = new Todo(_, {
         id: null,
         title: 'Todo',
@@ -24,8 +35,6 @@ var App = CustomElement.createElement({
         })
     });
 
-    options.data.todo = options.data.defaultTodo;
-
     CustomElement.call(_, options);
 
     window.ononline = function onlineStatusChange() {
@@ -33,8 +42,21 @@ var App = CustomElement.createElement({
     };
 
     _.get('api').restoreFromLocal(function(err, todos) {
+        var todo = findTodo(todos || [], cookies.get(SELECTED_TODO));
+
+        _.set('todo', todo || options.data.defaultTodo);
         _.set('todos', todos || []);
         _.syncAPI();
+    });
+
+    _.on('update', function(key, value) {
+        if (key === 'todo') {
+            if (value && value.id) {
+                cookies.set(SELECTED_TODO, value.id.toString(), { expires: 365 });
+            } else {
+                cookies.erase(SELECTED_TODO);
+            }
+        }
     });
 
     setInterval(function() {

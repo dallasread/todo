@@ -1,9 +1,11 @@
 <div class="list">
-    {{#with todo=todo todos=todos app=app back=back}}
+    {{#with todo=todo todos=todos app=app}}
         <h1>
-            <a href="#" onclick::{{@setTodo(app, back)}} class="back">
-                ▸
-            </a>
+            <span class="back">
+                <a href="#" onclick::{{@setTodo(app, app.data.defaultTodo)}}>
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </span>
 
             <input type="text" disabled="disabled" value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
         </h1>
@@ -26,6 +28,12 @@
             <li>
                 <label>Current API Key</label>
                 <input type="text" value::{{app.data.api.remoteStore.basicAuth}}>
+            </li>
+
+            <li class="styleless"></li>
+
+            <li onclick::{{@resetKeyChain(app, app.data.keychain)}}>
+                <span>Reset Keychain</span>
             </li>
 
             <!-- <li class="styleless">

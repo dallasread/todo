@@ -1,67 +1,103 @@
 <div class="list">
-    {{#with todo=todo todos=todos app=app back=back keychain=keychain isUnlocked=@isUnlocked(keychain, todo)}}
+    {{#with todo=todo todos=todos app=app keychain=app.data.keychain isUnlocked=@isUnlocked(keychain, todo) parent=@findParent(todo, app.data.defaultTodo)}}
         <h1>
-            {{#if back}}
-                <a href="#" onclick::{{@setTodo(app, @hasPin(todo.pin) ? app.data.defaultTodo : back)}} class="back">
-                    ▸
-                </a>
+            {{#if parent}}
+                <span class="back">
+                    <a href="#" onclick::{{@setTodo(app, @hasPin(todo.pin) ? app.data.defaultTodo : parent)}}>
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </span>
 
                 <span class="cog">
                     <a href="#" onclick::{{@togglePin(app, todo)}} class="{{#if @hasPin(todo.pin)}}pinned{{/if}}">
-                        ◉
+                        <i class="fa fa-map-marker"></i>
                     </a>
 
                     {{#if todo.has_password}}
                         {{#if isUnlocked}}
-                            <a href="#" onclick::{{@togglePin(app, todo)}}>
-                                🔒
+                            <a href="#" class="locked" onclick::{{@forgetPassword(app, keychain, todo)}}>
+                                <i class="fa fa-lock"></i>
                             </a>
                         {{else}}
-                            <a href="#" onclick::{{@togglePin(app, todo)}}>
-                                🔒
+                            <a href="#" class="pinned" onclick::{{@toggleTodo(app, todo, '_is')}}>
+                                <i class="fa fa-lock"></i>
                             </a>
                         {{/if}}
                     {{else}}
-                        <a href="#" onclick::{{@togglePin(app, todo)}}>
-                            🔓
-                        </a>
+                        {{#if todo._isSettingPassword}}
+                            <a href="#" class="active" onclick::{{@toggleTodo(app, todo, '_isSettingPassword')}}>
+                                <i class="fa fa-lock"></i>
+                            </a>
+                        {{else}}
+                            <a href="#" onclick::{{@toggleTodo(app, todo, '_isSettingPassword')}}>
+                                <i class="fa fa-unlock"></i>
+                            </a>
+                        {{/if}}
                     {{/if}}
                 </span>
-            {{else}}
-                {{#if todo.cog}}
-                    <a href="#" onclick::{{@setTodo(app, todo.cog)}} class="back settings-back">
-                        ⚙
+            {{/if}}
+
+            {{#if todo.cog}}
+                <span class="back">
+                    <a href="#" onclick::{{@setTodo(app, todo.cog)}} class="settings-back">
+                        <i class="fa fa-cog"></i>
                     </a>
-                {{/if}}
+                </span>
             {{/if}}
 
             <input type="text" disabled::{{!todo.id}} value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
         </h1>
 
-        <ul class="todos">
-            {{#each @findTodos(todo, todos)}}
-                <li data-id="{{id}}" class="{{@hasPin(pin) ? 'pinned' : ''}}">
-                    <a href="#" onclick::{{@setTodo(app, this)}} class="go">
-                        ▸
-                    </a>
+        {{#if todo._isSettingPassword}}
+            <form onsubmit::{{@setPassword(app, keychain, todo, password)}}>
+                <ul class="todos">
+                    <li class="styleless"></li>
+                    <li class="styleless"></li>
+                    <li class="styleless"></li>
+                    <li class="styleless cancel">
+                        To encrypt "{{todo.title}}" and its contents, enter a password.<br>
+                    </li>
+                    <li>
+                        <input type="text" value::{{password}} onblur::{{@setTodoInfo(this, 'title')}}>
+                    </li>
+                    <li class="styleless"></li>
+                    <li class="styleless cancel">
+                        Without this password, your data will NOT be retrievable.
+                    </li>
+                    <li class="styleless">
+                        <button>Encrypt "{{todo.title}}"</button>
+                    </li>
+                    <li class="styleless cancel" onclick::{{@toggleTodo(app, todo, '_isSettingPassword')}}>
+                        <a href="#">Cancel</a>
+                    </li>
+                </ul>
+            </form>
+        {{else}}
+            <ul class="todos">
+                {{#each @findTodos(todo, todos)}}
+                    <li data-id="{{id}}" class="{{@hasPin(pin) ? 'pinned' : ''}}">
+                        <a href="#" onclick::{{@setTodo(app, this)}} class="go">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
 
-                    <a href="#" onclick::{{@deleteTodo(app, this)}} class="delete">
-                        x
-                    </a>
+                        <a href="#" onclick::{{@deleteTodo(app, this)}} class="delete">
+                            <i class="fa fa-times"></i>
+                        </a>
 
-                    <input type="text" value::{{title}} onblur::{{@setTodoInfo(this, 'title')}}>
-                </li>
-            {{/each}}
-        </ul>
-
-        {{#if isAdding}}
-            <ul class="new-item">
-                <li>
-                    <form onsubmit::{{@add(app, list, todo)}}>
-                        <input type="text" value::{{newTodo.title}} oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(app, list, todo, 1)}}>
-                    </form>
-                </li>
+                        <input type="text" value::{{title}} onblur::{{@setTodoInfo(this, 'title')}}>
+                    </li>
+                {{/each}}
             </ul>
+
+            {{#if isAdding}}
+                <ul class="new-item">
+                    <li>
+                        <form onsubmit::{{@add(app, list, todo)}}>
+                            <input type="text" value::{{newTodo.title}} oninput::{{@set(list, 'newTodo.title')}} onblur::{{@add(app, list, todo, 1)}}>
+                        </form>
+                    </li>
+                </ul>
+            {{/if}}
         {{/if}}
     {{/with}}
 </div>

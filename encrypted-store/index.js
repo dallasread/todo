@@ -23,7 +23,7 @@ var EncryptedStore = Generator.generate(function EncryptedStore(options) {
 });
 
 EncryptedStore.definePrototype({
-    reviveSalt: function reviveSalt() {
+    reviveSalt: function reviveSalt(ignoreReset) {
         var _ = this,
             salt = cookies.get(_.cookieName);
 
@@ -34,7 +34,8 @@ EncryptedStore.definePrototype({
                 CryptoJS.HmacSHA512(
                     Math.random(),
                     (new Date().getTime() * Math.random()).toString()
-                ).toString()
+                ).toString(),
+                ignoreReset
             );
         }
     },
@@ -44,7 +45,7 @@ EncryptedStore.definePrototype({
 
         _.salt = salt;
 
-        if (ignoreReset) {
+        if (!ignoreReset) {
             _.reset();
         }
 
@@ -84,7 +85,9 @@ EncryptedStore.definePrototype({
 
     reset: function reset() {
         var _ = this;
-        return _.store.reset();
+        cookies.erase(_.cookieName);
+        _.store.reset();
+        _.reviveSalt(true);
     },
 });
 

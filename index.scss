@@ -5,6 +5,7 @@ $black: #000;
 $light-red: #c41313;
 $dark-red: #ad1111;
 $darker-red: #8F0F0F;
+$green: #35A63F;
 
 body {
     font-size: 19px;
@@ -26,42 +27,43 @@ body {
 
 .list {
     padding: $padding / 2 0;
+    padding-top: 0;
     margin-bottom: $padding * 5;
 
     h1 {
         text-align: center;
-        padding: $padding;
-        padding-bottom: $padding * 2;
 
         input {
-            padding: 0;
             width: 100%;
             text-align: center;
+            padding: $padding * 1.5 $padding;
         }
 
         .back, .cog {
             position: absolute;
-            top: 3px;
-            padding: $padding * 1.5 $padding;
-            color: rgba(255, 255, 255, 0.5);
-            background: $black;
-            font-size: 122%;
-            color: #fff;
-        }
+            color: #555;
+            font-size: 120%;
 
-        .back {
-            right: $padding;
-            transform: rotate(-90deg);
-
-            &.settings-back {
+            &.back {
                 right: 0;
             }
-        }
 
-        .cog {
-            top: 6px;
-            left: $padding;
-            font-size: 100%;
+            .fa-chevron-up {
+                font-size: 80%;
+            }
+
+            a {
+                display: inline-block;
+                padding: $padding * 1.5;
+
+                &.active {
+                    color: #ccc;
+                }
+
+                &.locked {
+                    color: $green;
+                }
+            }
 
             .pinned {
                 color: $light-red;
@@ -90,6 +92,12 @@ body {
             border-bottom: 0;
         }
 
+        &.cancel {
+            font-size: 80%;
+            color: #ccc;
+            text-align: center;
+        }
+
         &.sortable-ghost {
             visibility: hidden;
         }
@@ -107,7 +115,7 @@ body {
             display: block;
         }
 
-        input {
+        input, span {
             display: block;
             width: calc(100% - #{$padding * 3});
             padding: $padding / 3 $padding / 2;
@@ -120,6 +128,10 @@ body {
             // &:hover, &:focus {
             //     background: rgba(0, 0, 0, 0.2);
             // }
+        }
+
+        .fa-chevron-right {
+            font-size: 70%;
         }
 
         .go {
@@ -156,7 +168,7 @@ body {
 
 
 button, .button {
-    background: green;
+    background: $green;
     padding: $padding;
     color: #fff;
     border: 0;

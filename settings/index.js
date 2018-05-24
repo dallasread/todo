@@ -6,7 +6,6 @@ var Settings = CustomElement.createElement({
         setTodo: function setTodo(app, todo, todos, id) {
             return function doSetTodo(event) {
                 if (event.target.tagName === 'INPUT') return;
-                app.set('back', todo.parent());
                 app.set('todo', todo);
             };
         },
@@ -15,7 +14,16 @@ var Settings = CustomElement.createElement({
             return function doSet(event) {
                 updater.set(key, value || event.target.value, startObj);
             };
-        }
+        },
+
+        resetKeyChain: function resetKeychain(updater, keychain) {
+            return function doResetKeychain() {
+                if (confirm('This will forget the password on each password-protected list. Are you sure you want to proceed?')) {
+                    keychain.reset();
+                    updater.update();
+                }
+            };
+        },
     }
 }, function Settings(options) {
     var _ = this;

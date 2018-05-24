@@ -61,9 +61,9 @@ Todo.definePrototype({
 
     parent: function parent() {
         var _ = this,
-            todos = _.app.get('todos');
+            todos = _.app.get('todos') || [];
 
-        if (!_.id) {
+        if (!_.id || !todos || !todos.length) {
             return;
         }
 
