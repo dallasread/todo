@@ -13,7 +13,7 @@
                         <i class="fa fa-map-marker"></i>
                     </a>
 
-                    {{#if todo.has_password}}
+                    <!-- {{#if todo.has_password}}
                         {{#if isUnlocked}}
                             <a href="#" class="locked" onclick::{{@forgetPassword(app, keychain, todo)}}>
                                 <i class="fa fa-lock"></i>
@@ -33,7 +33,7 @@
                                 <i class="fa fa-unlock"></i>
                             </a>
                         {{/if}}
-                    {{/if}}
+                    {{/if}} -->
                 </span>
             {{/if}}
 
@@ -62,7 +62,7 @@
                     </li>
                     <li class="styleless"></li>
                     <li class="styleless cancel">
-                        Without this password, your data will NOT be retrievable.
+                        Your data will not be retrievable without this password, so keep it safe.
                     </li>
                     <li class="styleless">
                         <button>Encrypt "{{todo.title}}"</button>
