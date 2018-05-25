@@ -168,6 +168,7 @@ body {
 
 
 button, .button {
+    outline: none;
     background: $green;
     padding: $padding;
     color: #fff;
@@ -175,4 +176,8 @@ button, .button {
     width: 100%;
     font-size: inherit;
     border-radius: 7px;
+}
+
+.align-center {
+    text-align: center;
 }

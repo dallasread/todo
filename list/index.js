@@ -49,13 +49,17 @@ var CustomElement = require('generate-js-custom-element'),
             return false;
         },
 
-        askForPassword: function askForPassword() {
+        askForKey: function askForKey() {
         },
 
-        setPassword: function setPassword() {
+        setKey: function setKey(app, todo) {
+            return function doSetKey(event) {
+                event.preventDefault();
+                app.encryptTodo(todo);
+            };
         },
 
-        forgetPassword: function forgetPassword(updater, keychain, todo, password) {
+        forgetKey: function forgetKey(updater, keychain, todo, Key) {
         },
 
         findParent: function findParent(todo, defaultTodo) {
@@ -87,7 +91,7 @@ var CustomElement = require('generate-js-custom-element'),
         setTodo: function setTodo(app, todo, todos, id) {
             return function doSetTodo(event) {
                 if (event.target.tagName === 'INPUT') return;
-                todo._isSettingPassword = false;
+                todo._isSettingKey = false;
                 app.set('todo', todo);
             };
         },

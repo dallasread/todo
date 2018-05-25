@@ -76,6 +76,30 @@ App.definePrototype({
             });
         });
     },
+
+    encryptTodo: function encryptTodo(todo) {
+        var _ = this,
+            keychain = _.get('keychain'),
+            api = _.get('api'),
+            todos = todo.descendants().concat([todo]);
+
+        todo.has_password = true;
+
+        for (var i = todos.length - 1; i >= 0; i--) {
+            todos[i].title = keychain.encrypt(todos[i].title, todo._key);
+        }
+
+        todo._key = void(0);
+
+        api.save(todos);
+
+        keychain.set(todo.id, {
+            expires: new Date(),
+            key: todo._key
+        });
+
+        _.update();
+    },
 });
 
 module.exports = App;

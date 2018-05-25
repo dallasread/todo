@@ -13,9 +13,9 @@
                         <i class="fa fa-map-marker"></i>
                     </a>
 
-                    <!-- {{#if todo.has_password}}
+                    {{#if todo.has_password}}
                         {{#if isUnlocked}}
-                            <a href="#" class="locked" onclick::{{@forgetPassword(app, keychain, todo)}}>
+                            <a href="#" class="locked" onclick::{{@forgetKey(app, keychain, todo)}}>
                                 <i class="fa fa-lock"></i>
                             </a>
                         {{else}}
@@ -24,16 +24,16 @@
                             </a>
                         {{/if}}
                     {{else}}
-                        {{#if todo._isSettingPassword}}
-                            <a href="#" class="active" onclick::{{@toggleTodo(app, todo, '_isSettingPassword')}}>
+                        {{#if todo._isSettingKey}}
+                            <a href="#" class="active" onclick::{{@toggleTodo(app, todo, '_isSettingKey')}}>
                                 <i class="fa fa-lock"></i>
                             </a>
                         {{else}}
-                            <a href="#" onclick::{{@toggleTodo(app, todo, '_isSettingPassword')}}>
+                            <a href="#" onclick::{{@toggleTodo(app, todo, '_isSettingKey')}}>
                                 <i class="fa fa-unlock"></i>
                             </a>
                         {{/if}}
-                    {{/if}} -->
+                    {{/if}}
                 </span>
             {{/if}}
 
@@ -48,8 +48,8 @@
             <input type="text" disabled::{{!todo.id}} value::{{todo.title}} onblur::{{@set(app, 'title', undefined, todo)}}>
         </h1>
 
-        {{#if todo._isSettingPassword}}
-            <form onsubmit::{{@setPassword(app, keychain, todo, password)}}>
+        {{#if todo._isSettingKey}}
+            <form onsubmit::{{@setKey(app, todo)}}>
                 <ul class="todos">
                     <li class="styleless"></li>
                     <li class="styleless"></li>
@@ -58,7 +58,7 @@
                         To encrypt "{{todo.title}}" and its contents, enter a password.<br>
                     </li>
                     <li>
-                        <input type="text" value::{{password}} onblur::{{@setTodoInfo(this, 'title')}}>
+                        <input type="text" value::{{todo._key}} onblur::{{@setTodoInfo(todo, '_key')}} class="align-center">
                     </li>
                     <li class="styleless"></li>
                     <li class="styleless cancel">
@@ -67,7 +67,7 @@
                     <li class="styleless">
                         <button>Encrypt "{{todo.title}}"</button>
                     </li>
-                    <li class="styleless cancel" onclick::{{@toggleTodo(app, todo, '_isSettingPassword')}}>
+                    <li class="styleless cancel" onclick::{{@toggleTodo(app, todo, '_isSettingKey')}}>
                         <a href="#">Cancel</a>
                     </li>
                 </ul>

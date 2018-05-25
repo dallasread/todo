@@ -72,6 +72,20 @@ Todo.definePrototype({
         }) || _.app.get('defaultTodo');
     },
 
+    descendants: function descendants(func) {
+        var _ = this,
+            todos = _.app.get('todos') || [],
+            arr = todos.filter(function(t) {
+                return t.todo_id === _.id;
+            });
+
+        for (var i = 0; i < arr.length; i++) {
+            arr = arr.concat(arr[i].descendants(func));
+        }
+
+        return typeof func === 'function' ? arr.filter(func) : arr;
+    },
+
     toJSON: function toJSON() {
         var _ = this,
             obj = {};

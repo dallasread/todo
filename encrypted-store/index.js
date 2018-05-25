@@ -54,23 +54,35 @@ EncryptedStore.definePrototype({
         }
     },
 
-    set: function set(key, value, done) {
-        var _ = this,
-            encrypted = CryptoJS.AES.encrypt(JSON.stringify(value), _.salt).toString();
+    encrypt: function encrypt(value, salt) {
+        var _ = this;
 
-        return _.store.set(key, btoa(encrypted), done);
+        return btoa(CryptoJS.AES.encrypt(JSON.stringify(value), salt || _.salt).toString());
+    },
+
+    decrypt: function decrypt(value, salt) {
+        var _ = this;
+
+        try {
+            return JSON.parse(CryptoJS.AES.decrypt(atob(value), salt || _.salt).toString(CryptoJS.enc.Utf8));
+        } catch (e) { }
+    },
+
+    set: function set(key, value, done) {
+        var _ = this;
+        return _.store.set(key.toString(), _.encrypt(value), done);
     },
 
     get: function get(key, done) {
         var _ = this;
 
-        return _.store.get(key, function(err, data) {
+        return _.store.get(key.toString(), function(err, data) {
             if (err) return console.error(err);
 
             var decrypted;
 
             try {
-                decrypted = JSON.parse(CryptoJS.AES.decrypt(atob(data), _.salt).toString(CryptoJS.enc.Utf8));
+                decrypted = _.decrypt(data);
 
                 if (!decrypted && !decrypted.length) {
                     return done(new Error('Unable to decrypt.'));
